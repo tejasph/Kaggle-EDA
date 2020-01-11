@@ -48,9 +48,9 @@ jumbotron = dbc.Jumbotron(
     [
         dbc.Container(
             [
-                html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
+                html.Img(src='https://qtxasset.com/styles/breakpoint_sm_default_480px_w/s3/fiercebiotech/1555676120/connor-wells-534089-unsplash.jpg/connor-wells-534089-unsplash.jpg?MLzphivqxLKuCKifkgl.3eGf_mETvKfV&itok=ii7r9S1Q', 
                       width='100px'),
-                html.H1("Kaggle EDA", className="display-3"),
+                html.H1("Kaggle EDA Heart Disease", className="display-3"),
                 html.P(
                     "Add a description of the dashboard",
                     className="lead",
@@ -62,58 +62,77 @@ jumbotron = dbc.Jumbotron(
     fluid=True,
 )
 
-logo = dbc.Row(dbc.Col(html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
-                      width='15%'), width=4))
-
 content = dbc.Container([
-    dbc.Row(
-                [dbc.Col(
-                    html.Iframe(
-                        sandbox='allow-scripts',
-                        id='plot',
-                        height='560',
-                        width='700',
-                        style={'border-width': '0'},
-                        ################ The magic happens here
-                        srcDoc=make_plot().to_html()
-                        ################ The magic happens here
-                        ),width='6'),
-                    dbc.Col(
-                        dcc.Dropdown(
-                            id='dd-chart-x',
-                            options=[
-                                {'label': 'Fuel Efficiency', 'value': 'Miles_per_Gallon'},
-                                {'label': 'Cylinders', 'value': 'Cylinders'},
-                                {'label': 'Displacement', 'value': 'Displacement'},
-                                {'label': 'Horsepower', 'value': 'Horsepower'}
-                            ],
-                            value='Horsepower',
-                            # style=dict(width='45%',
-                            #         verticalAlign="middle")
-                            ), width=2
-                            ),
-                    dbc.Col(        
-                        dcc.Dropdown(
-                        id='dd-chart-y',
-                        options=[
-                            {'label': 'Fuel Efficiency', 'value': 'Miles_per_Gallon'},
-                            {'label': 'Cylinders', 'value': 'Cylinders'},
-                            {'label': 'Displacement', 'value': 'Displacement'},
-                            {'label': 'Horsepower', 'value': 'Horsepower'}
-                        ],
-                        value='Displacement'
-                        ), width=2
-                    )
-                ]
-            )
-    ]
-)
+    dbc.Row([
+        dbc.Col(html.P("X-axis dropdown"), width = 1),
+        dbc.Col(
+            dcc.Dropdown(
+                id = 'test',
+                options = [{'label':k , 'value': k } for k in heart_df.columns],
+                value = 'thal'
+
+            ), width = 1
+        )
+
+
+    ])
+])
+
+# logo = dbc.Row(dbc.Col(html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
+#                       width='15%'), width=4))
+
+# content = dbc.Container([
+#     dbc.Row(
+#                 [
+#                     dbc.Col(
+
+#                         dcc.Dropdown(
+#                             id='dd-chart-x',
+#                             options=[
+#                                 {'label': 'Fuel Efficiency', 'value': 'Miles_per_Gallon'},
+#                                 {'label': 'Cylinders', 'value': 'Cylinders'},
+#                                 {'label': 'Displacement', 'value': 'Displacement'},
+#                                 {'label': 'Horsepower', 'value': 'Horsepower'}
+#                             ],
+#                             value='Horsepower',
+#                             # style=dict(width='45%',
+#                             #         verticalAlign="middle")
+#                             ), 
+#                             width= {'size':2, 'offset': 10}
+#                             ),
+#                     dbc.Col(        
+#                         dcc.Dropdown(
+#                         id='dd-chart-y',
+#                         options=[
+#                             {'label': 'Fuel Efficiency', 'value': 'Miles_per_Gallon'},
+#                             {'label': 'Cylinders', 'value': 'Cylinders'},
+#                             {'label': 'Displacement', 'value': 'Displacement'},
+#                             {'label': 'Horsepower', 'value': 'Horsepower'}
+#                         ],
+#                         value='Displacement'
+#                         ), width=2
+#                     ),
+#                     dbc.Col(
+#                     html.Iframe(
+#                         sandbox='allow-scripts',
+#                         id='plot',
+#                         height='560',
+#                         width='700',
+#                         style={'border-width': '0'},
+#                         ################ The magic happens here
+#                         srcDoc=make_plot().to_html()
+#                         ################ The magic happens here
+#                         ),width='6'),
+#                 ]
+#             )
+#     ]
+# )
 
 footer = dbc.Container([dbc.Row(dbc.Col(html.P('This Dash app was made collaboratively by the DSCI 532 class in 2019/20!'))),
          ])
 
 app.layout = html.Div([jumbotron,
-                       content,
+                        content,
                        footer])
 
 # @app.callback(
