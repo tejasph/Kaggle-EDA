@@ -11,7 +11,7 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.config['suppress_callback_exceptions'] = True
 
 server = app.server
@@ -39,7 +39,7 @@ def make_plot(xval = 'age',
                 alt.Y(yval),
                 alt.Color("sex:N"),
             ).properties(title='{0} vs. {1}'.format(xval,yval),
-                        width=500, height=350)
+                        width=300, height=200)
 
 
     return (chart)
@@ -65,14 +65,14 @@ jumbotron = dbc.Jumbotron(
                     options = [{'label':k , 'value': k } for k in heart_df.columns],
                     value = 'thal'
 
-                )
+                ), width = 3
             ),
             dbc.Col(
                 dcc.Dropdown(
                     id = 'y-axis',
                     options = [{'label':k , 'value': k } for k in heart_df.columns],
                     value = 'target'
-                ), style = {'width': 3}
+                ), width = 3
                 
             )
         ])
@@ -81,6 +81,22 @@ jumbotron = dbc.Jumbotron(
     fluid=True,
 )
 
+container = dbc.Container([
+    dbc.Row([
+        dbc.Col(
+            html.Iframe(
+                sandbox='allow-scripts',
+                id='basic_plot',
+                height='300',
+                width='400',
+                style={'border-width': '0'},
+                ################ The magic happens here
+                srcDoc = make_plot().to_html()
+                ################ The magic happens here
+            )
+        )
+    ])
+])
 
 # logo = dbc.Row(dbc.Col(html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
 #                       width='15%'), width=4))
@@ -136,6 +152,7 @@ footer = dbc.Container([dbc.Row(dbc.Col(html.P('This Dash app was made collabora
          ])
 
 app.layout = html.Div([jumbotron,
+                        container,
                        footer])
 
 @app.callback(
