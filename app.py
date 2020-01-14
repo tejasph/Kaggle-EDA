@@ -57,26 +57,30 @@ jumbotron = dbc.Jumbotron(
                 ),
             ],
             fluid=True,
-        )
+        ),
+        dbc.Row([
+            dbc.Col(
+                dcc.Dropdown(
+                    id = 'x-axis',
+                    options = [{'label':k , 'value': k } for k in heart_df.columns],
+                    value = 'thal'
+
+                )
+            ),
+            dbc.Col(
+                dcc.Dropdown(
+                    id = 'y-axis',
+                    options = [{'label':k , 'value': k } for k in heart_df.columns],
+                    value = 'target'
+                ), style = {'width': 3}
+                
+            )
+        ])
+        
     ],
     fluid=True,
 )
 
-content = dbc.Container([
-    dbc.Row([
-        dbc.Col(html.P("X-axis dropdown"), width = 1),
-        dbc.Col(
-            dcc.Dropdown(
-                id = 'test',
-                options = [{'label':k , 'value': k } for k in heart_df.columns],
-                value = 'thal'
-
-            ), width = 1
-        )
-
-
-    ])
-])
 
 # logo = dbc.Row(dbc.Col(html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
 #                       width='15%'), width=4))
@@ -132,21 +136,20 @@ footer = dbc.Container([dbc.Row(dbc.Col(html.P('This Dash app was made collabora
          ])
 
 app.layout = html.Div([jumbotron,
-                        content,
                        footer])
 
-# @app.callback(
-#     dash.dependencies.Output('plot', 'srcDoc'),
-#     [dash.dependencies.Input('dd-chart-x', 'value'),
-#      dash.dependencies.Input('dd-chart-y', 'value')])
-# def update_plot(xaxis_column_name,
-#                 yaxis_column_name):
-#     '''
-#     Takes in an xaxis_column_name and calls make_plot to update our Altair figure
-#     '''
-#     updated_plot = make_plot(xaxis_column_name,
-#                              yaxis_column_name).to_html()
-#     return updated_plot
+@app.callback(
+    dash.dependencies.Output('basic_plot', 'srcDoc'),
+    [dash.dependencies.Input('x-axis', 'value'),
+     dash.dependencies.Input('y-axis', 'value')])
+def update_plot(xaxis_column_name,
+                yaxis_column_name):
+    '''
+    Takes in an xaxis_column_name and calls make_plot to update our Altair figure
+    '''
+    updated_plot = make_plot(xaxis_column_name,
+                             yaxis_column_name).to_html()
+    return updated_plot
 
 if __name__ == '__main__':
     app.run_server(debug=True)
