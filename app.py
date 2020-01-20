@@ -84,7 +84,26 @@ jumbotron = dbc.Jumbotron(
 container = dbc.Container([
     dbc.Row([
         dbc.Col(
-            html.Iframe(
+            # html.Iframe(
+            #     sandbox='allow-scripts',
+            #     id='basic_plot',
+            #     height='300',
+            #     width='400',
+            #     style={'border-width': '0'},
+            #     ################ The magic happens here
+            #     srcDoc = make_plot().to_html()
+            #     ################ The magic happens here
+            # )
+        )
+    ])
+])
+
+card = dbc.Card(
+    [
+        dbc.CardBody(
+            [
+                html.P("test"),
+                html.Iframe(
                 sandbox='allow-scripts',
                 id='basic_plot',
                 height='300',
@@ -94,10 +113,11 @@ container = dbc.Container([
                 srcDoc = make_plot().to_html()
                 ################ The magic happens here
             )
-        )
-    ])
-])
 
+            ]
+        )
+    ]
+)
 # logo = dbc.Row(dbc.Col(html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
 #                       width='15%'), width=4))
 
@@ -151,7 +171,8 @@ container = dbc.Container([
 
 
 app.layout = html.Div([jumbotron,
-                        container])
+                        container,
+                        card])
 
 @app.callback(
     dash.dependencies.Output('basic_plot', 'srcDoc'),
