@@ -11,7 +11,7 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 app.config['suppress_callback_exceptions'] = True
 
 server = app.server
@@ -78,7 +78,7 @@ jumbotron = dbc.Jumbotron(
         ])
         
     ],
-    fluid=True,
+    fluid=True
 )
 
 container = dbc.Container([
@@ -148,12 +148,10 @@ container = dbc.Container([
 #     ]
 # )
 
-footer = dbc.Container([dbc.Row(dbc.Col(html.P('This Dash app was made collaboratively by the DSCI 532 class in 2019/20!'))),
-         ])
+
 
 app.layout = html.Div([jumbotron,
-                        container,
-                       footer])
+                        container])
 
 @app.callback(
     dash.dependencies.Output('basic_plot', 'srcDoc'),
