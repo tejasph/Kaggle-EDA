@@ -11,7 +11,7 @@ class Plotter:
     def __init__(self, data): 
         self.data = data
 
-    def make_plot(self, xval = 'age',
+    def make_scatter(self, xval = 'age',
               yval = 'trestbps'):
     # Don't forget to include imports
 
