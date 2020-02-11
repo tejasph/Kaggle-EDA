@@ -5,6 +5,7 @@ from dash.dependencies import Input, Output
 import altair as alt
 import vega_datasets
 import pandas as pd
+import plotter
 
 ### NEW IMPORT
 # See Docs here: https://dash-bootstrap-components.opensource.faculty.ai
@@ -18,31 +19,7 @@ server = app.server
 app.title = 'Dash app with pure Altair HTML'
 
 heart_df = pd.read_csv("heart.csv")
-
-def make_plot(xval = 'age',
-              yval = 'trestbps', 
-              data = heart_df):
-    # Don't forget to include imports
-
-
-    # typeDict = {'Displacement':['quantitative','Displacement (mm)'],
-    #             'Cylinders':['ordinal', 'Cylinders (#)'],
-    #             'Miles_per_Gallon':['quantitative', 'Fuel Efficiency (mpg)'],
-    #             'Horsepower':['quantitative', 'Horsepower (hp)']
-    #             }
-
-    # Create a plot from the cars dataset
-
-
-    chart = alt.Chart(data).mark_point(size=90).encode(
-                alt.X(xval),
-                alt.Y(yval),
-                alt.Color("sex:N"),
-            ).properties(title='{0} vs. {1}'.format(xval,yval),
-                        width=300, height=200)
-
-
-    return (chart)
+plotter_object = plotter.Plotter(heart_df)
 
 jumbotron = dbc.Jumbotron(
     [
@@ -110,7 +87,7 @@ card = dbc.Card(
                 width='400',
                 style={'border-width': '0'},
                 ################ The magic happens here
-                srcDoc = make_plot().to_html()
+                srcDoc = plotter_object.make_plot().to_html()
                 ################ The magic happens here
             )
 
@@ -183,7 +160,7 @@ def update_plot(xaxis_column_name,
     '''
     Takes in an xaxis_column_name and calls make_plot to update our Altair figure
     '''
-    updated_plot = make_plot(xaxis_column_name,
+    updated_plot = plotter_object.make_plot(xaxis_column_name,
                              yaxis_column_name).to_html()
     return updated_plot
 
