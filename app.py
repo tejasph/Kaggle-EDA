@@ -5,7 +5,14 @@ from dash.dependencies import Input, Output
 import altair as alt
 import vega_datasets
 import pandas as pd
-import plotter
+from src import utils
+
+#To do:
+# - add new graph types
+# - get a nice layout going, using DBC cards or other boostrap componenets
+# - add user upload of their own data option
+
+# Wishlist: graphing options, feature transformation options, feature engineering options?
 
 ### NEW IMPORT
 # See Docs here: https://dash-bootstrap-components.opensource.faculty.ai
@@ -19,7 +26,7 @@ server = app.server
 app.title = 'Dash app with pure Altair HTML'
 
 heart_df = pd.read_csv("heart.csv")
-plotter_object = plotter.Plotter(heart_df)
+Plotter = utils.Plotter(heart_df)
 
 jumbotron = dbc.Jumbotron(
     [
@@ -39,7 +46,7 @@ jumbotron = dbc.Jumbotron(
             dbc.Col(
                 dcc.Dropdown(
                     id = 'x-axis',
-                    options = [{'label':k , 'value': k } for k in heart_df.columns],
+                    options = [{'label':k , 'value': k } for k in Plotter.features],
                     value = 'thal'
 
                 ), width = 3
@@ -47,7 +54,7 @@ jumbotron = dbc.Jumbotron(
             dbc.Col(
                 dcc.Dropdown(
                     id = 'y-axis',
-                    options = [{'label':k , 'value': k } for k in heart_df.columns],
+                    options = [{'label':k , 'value': k } for k in Plotter.features],
                     value = 'target'
                 ), width = 3
                 
@@ -76,24 +83,23 @@ container = dbc.Container([
 ])
 
 card = dbc.Card(
-    [
-        dbc.CardBody(
-            [
-                html.P("test"),
-                html.Iframe(
-                sandbox='allow-scripts',
-                id='basic_plot',
-                height='300',
-                width='400',
-                style={'border-width': '0'},
-                ################ The magic happens here
-                srcDoc = plotter_object.make_plot().to_html()
-                ################ The magic happens here
-            )
-
-            ]
+    
+    dbc.CardBody(
+        [
+            html.P("test"),
+            html.Iframe(
+            sandbox='allow-scripts',
+            id='scatter_plot',
+            height='300',
+            width='400',
+            style={'border-width': '2', 'border': '2px solid red', 'backgroundColor': "white"},
+            ################ The magic happens here
+            srcDoc = Plotter.make_scatter().to_html()
+            ################ The magic happens here
         )
-    ]
+
+        ]
+    ),className="card text-white bg-secondary mb-3", style = {"width": "30rem"}
 )
 # logo = dbc.Row(dbc.Col(html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
 #                       width='15%'), width=4))
@@ -152,7 +158,7 @@ app.layout = html.Div([jumbotron,
                         card])
 
 @app.callback(
-    dash.dependencies.Output('basic_plot', 'srcDoc'),
+    dash.dependencies.Output('scatter_plot', 'srcDoc'),
     [dash.dependencies.Input('x-axis', 'value'),
      dash.dependencies.Input('y-axis', 'value')])
 def update_plot(xaxis_column_name,
@@ -160,7 +166,7 @@ def update_plot(xaxis_column_name,
     '''
     Takes in an xaxis_column_name and calls make_plot to update our Altair figure
     '''
-    updated_plot = plotter_object.make_plot(xaxis_column_name,
+    updated_plot = Plotter.make_scatter(xaxis_column_name,
                              yaxis_column_name).to_html()
     return updated_plot
 

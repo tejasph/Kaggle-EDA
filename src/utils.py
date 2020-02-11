@@ -10,6 +10,7 @@ import altair as alt
 class Plotter:
     def __init__(self, data): 
         self.data = data
+        self.features = data.columns
 
     def make_scatter(self, xval = 'age',
               yval = 'trestbps'):
