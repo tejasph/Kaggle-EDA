@@ -1,7 +1,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import altair as alt
 import vega_datasets
 import pandas as pd
@@ -30,6 +30,8 @@ Plotter = utils.Plotter(heart_df)
 
 # dcc Components
 
+
+
 x_axis =    dcc.Dropdown(
                 id = 'x-axis',
                 options = [{'label':k , 'value': k } for k in Plotter.features],
@@ -45,6 +47,33 @@ y_axis =    dbc.Col(
                 )
                 
             )
+
+categorical_vars = dcc.Checklist(
+    id = 'categorical selection',
+    options = [{'label':k , 'value': k } for k in Plotter.features],
+    inputStyle={"margin-left": "20px", "margin-right" : "5px"}
+)
+
+# once variables are selected, we can disable everything else; or better yet, have the upload and variable selections in the first tab, disable other tabs
+variable_manager = html.Div(
+    [
+        dbc.Button("Typify Variables", id="open"),
+        dbc.Modal(
+            [
+                dbc.ModalHeader("Select categorical variables; the rest will be considered numerical"),
+                dbc.ModalBody(
+                    categorical_vars
+                ),
+                dbc.ModalFooter(
+                    dbc.Button("Submit", id="close", className="ml-auto")
+                ),
+            ],
+            id="modal",
+            size = "lg",
+            centered = True
+        ),
+    ]
+)
 
 jumbotron = dbc.Jumbotron(
     [
@@ -103,6 +132,46 @@ card = dbc.Card(
         ]
     ),className="card text-white bg-secondary mb-3", style = {"width": "30rem"}
 )
+
+
+app.layout = html.Div([variable_manager,
+                        jumbotron,
+                        container,
+                        card])
+
+
+@app.callback(
+    Output("modal", "is_open"),
+    [Input("open", "n_clicks"), Input("close", "n_clicks")],
+    [State("modal", "is_open")],
+)
+def toggle_modal(n1, n2, is_open):
+    
+    if n1 or n2:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output('scatter_plot', 'srcDoc'),
+    [Input('x-axis', 'value'),
+     Input('y-axis', 'value')])
+def update_plot(xaxis_column_name,
+                yaxis_column_name):
+    '''
+    Takes in an xaxis_column_name and calls make_plot to update our Altair figure
+    '''
+    updated_plot = Plotter.make_scatter(xaxis_column_name,
+                             yaxis_column_name).to_html()
+    return updated_plot
+
+
+
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
+
+
+
 # logo = dbc.Row(dbc.Col(html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
 #                       width='15%'), width=4))
 
@@ -153,24 +222,3 @@ card = dbc.Card(
 #     ]
 # )
 
-
-
-app.layout = html.Div([jumbotron,
-                        container,
-                        card])
-
-@app.callback(
-    dash.dependencies.Output('scatter_plot', 'srcDoc'),
-    [dash.dependencies.Input('x-axis', 'value'),
-     dash.dependencies.Input('y-axis', 'value')])
-def update_plot(xaxis_column_name,
-                yaxis_column_name):
-    '''
-    Takes in an xaxis_column_name and calls make_plot to update our Altair figure
-    '''
-    updated_plot = Plotter.make_scatter(xaxis_column_name,
-                             yaxis_column_name).to_html()
-    return updated_plot
-
-if __name__ == '__main__':
-    app.run_server(debug=True)

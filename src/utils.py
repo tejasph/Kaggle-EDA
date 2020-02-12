@@ -19,7 +19,6 @@ class Plotter:
         chart = alt.Chart(self.data).mark_point(size=90).encode(
                     alt.X(xval),
                     alt.Y(yval),
-                    alt.Color("sex:N"),
                 ).properties(title='{0} vs. {1}'.format(xval,yval),
                             width=300, height=200)
 
