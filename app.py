@@ -1,10 +1,18 @@
+import base64
+import datetime
+import io
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
+
+import dash_table
+
 import altair as alt
 import vega_datasets
 import pandas as pd
+
 from src import utils
 
 #To do:
@@ -28,9 +36,8 @@ app.title = 'Dash app with pure Altair HTML'
 heart_df = pd.read_csv("heart.csv")
 Plotter = utils.Plotter(heart_df)
 
+
 # dcc Components
-
-
 
 x_axis =    dcc.Dropdown(
                 id = 'x-axis',
@@ -39,14 +46,14 @@ x_axis =    dcc.Dropdown(
 
             )
 
-y_axis =    dbc.Col(
-                dcc.Dropdown(
-                    id = 'y-axis',
-                    options = [{'label':k , 'value': k } for k in Plotter.features],
-                    value = 'target'
-                )
-                
+y_axis =    dcc.Dropdown(
+                id = 'y-axis',
+                options = [{'label':k , 'value': k } for k in Plotter.features],
+                value = 'target'
             )
+                
+
+
 
 categorical_vars = dcc.Checklist(
     id = 'categorical selection',
@@ -96,22 +103,6 @@ jumbotron = dbc.Jumbotron(
     fluid=True
 )
 
-container = dbc.Container([
-    dbc.Row([
-        dbc.Col(
-            # html.Iframe(
-            #     sandbox='allow-scripts',
-            #     id='basic_plot',
-            #     height='300',
-            #     width='400',
-            #     style={'border-width': '0'},
-            #     ################ The magic happens here
-            #     srcDoc = make_plot().to_html()
-            #     ################ The magic happens here
-            # )
-        )
-    ])
-])
 
 card = dbc.Card(
     
@@ -133,11 +124,30 @@ card = dbc.Card(
     ),className="card text-white bg-secondary mb-3", style = {"width": "30rem"}
 )
 
+# Data Settings Tab Layout
+data_settings_content = html.Div([
+    variable_manager
+])
 
-app.layout = html.Div([variable_manager,
-                        jumbotron,
-                        container,
+# Exploratory Data Analysis Layout
+eda_content = html.Div([jumbotron,
                         card])
+
+
+#####################
+# Tab Layout
+#####################
+app.layout = dbc.Tabs(
+    [
+        dbc.Tab(data_settings_content, label = "Data Settings"),
+        dbc.Tab(eda_content, label = "Exploratory Data Analysis")
+    ]
+)
+
+#####################
+# Callbacks
+#####################
+
 
 
 @app.callback(
@@ -170,10 +180,23 @@ def update_plot(xaxis_column_name,
 if __name__ == '__main__':
     app.run_server(debug=True)
 
+# container = dbc.Container([
+#     dbc.Row([
+#         dbc.Col(
+#             # html.Iframe(
+#             #     sandbox='allow-scripts',
+#             #     id='basic_plot',
+#             #     height='300',
+#             #     width='400',
+#             #     style={'border-width': '0'},
+#             #     ################ The magic happens here
+#             #     srcDoc = make_plot().to_html()
+#             #     ################ The magic happens here
+#             # )
+#         )
+#     ])
+# ])
 
-
-# logo = dbc.Row(dbc.Col(html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Unico_Anello.png/1920px-Unico_Anello.png', 
-#                       width='15%'), width=4))
 
 # content = dbc.Container([
 #     dbc.Row(
