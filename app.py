@@ -28,6 +28,24 @@ app.title = 'Dash app with pure Altair HTML'
 heart_df = pd.read_csv("heart.csv")
 Plotter = utils.Plotter(heart_df)
 
+# dcc Components
+
+x_axis =    dcc.Dropdown(
+                id = 'x-axis',
+                options = [{'label':k , 'value': k } for k in Plotter.features],
+                value = 'thal'
+
+            )
+
+y_axis =    dbc.Col(
+                dcc.Dropdown(
+                    id = 'y-axis',
+                    options = [{'label':k , 'value': k } for k in Plotter.features],
+                    value = 'target'
+                )
+                
+            )
+
 jumbotron = dbc.Jumbotron(
     [
         dbc.Container(
@@ -42,24 +60,8 @@ jumbotron = dbc.Jumbotron(
             ],
             fluid=True,
         ),
-        dbc.Row([
-            dbc.Col(
-                dcc.Dropdown(
-                    id = 'x-axis',
-                    options = [{'label':k , 'value': k } for k in Plotter.features],
-                    value = 'thal'
-
-                ), width = 3
-            ),
-            dbc.Col(
-                dcc.Dropdown(
-                    id = 'y-axis',
-                    options = [{'label':k , 'value': k } for k in Plotter.features],
-                    value = 'target'
-                ), width = 3
-                
-            )
-        ])
+        dbc.Row([dbc.Col(html.P("X-Axis")), dbc.Col(html.P("Y-axis"))]),
+        dbc.Row([dbc.Col(x_axis), dbc.Col(y_axis)])
         
     ],
     fluid=True

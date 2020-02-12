@@ -10,21 +10,11 @@ import altair as alt
 class Plotter:
     def __init__(self, data): 
         self.data = data
+        # implement some sort of filter to get categorical columns separate from numerical columns 
         self.features = data.columns
 
     def make_scatter(self, xval = 'age',
               yval = 'trestbps'):
-    # Don't forget to include imports
-
-
-    # typeDict = {'Displacement':['quantitative','Displacement (mm)'],
-    #             'Cylinders':['ordinal', 'Cylinders (#)'],
-    #             'Miles_per_Gallon':['quantitative', 'Fuel Efficiency (mpg)'],
-    #             'Horsepower':['quantitative', 'Horsepower (hp)']
-    #             }
-
-    # Create a plot from the cars dataset
-
 
         chart = alt.Chart(self.data).mark_point(size=90).encode(
                     alt.X(xval),
