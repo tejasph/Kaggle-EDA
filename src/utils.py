@@ -13,6 +13,10 @@ class Plotter:
         # implement some sort of filter to get categorical columns separate from numerical columns 
         self.features = data.columns
 
+        # User will specify these within the app
+        self.numerical_feat = []
+        self.categorical_feat = []
+
     def make_scatter(self, xval = 'age',
               yval = 'trestbps'):
 

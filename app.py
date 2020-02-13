@@ -140,7 +140,7 @@ eda_content = html.Div([jumbotron,
 app.layout = dbc.Tabs(
     [
         dbc.Tab(data_settings_content, label = "Data Settings"),
-        dbc.Tab(eda_content, label = "Exploratory Data Analysis")
+        dbc.Tab(eda_content, label = "Exploratory Data Analysis", disabled= True, id = "eda-tab")
     ]
 )
 
