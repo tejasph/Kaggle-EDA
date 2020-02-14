@@ -107,8 +107,8 @@ jumbotron = dbc.Jumbotron(
     fluid=True
 )
 
-
-card = dbc.Card(
+# Scatterplot
+scatterplot = dbc.Card(
     
     dbc.CardBody(
         [
@@ -128,6 +128,24 @@ card = dbc.Card(
     ),className="card text-white bg-secondary mb-3", style = {"width": "30rem"}
 )
 
+x_var_histogram = dbc.Card(
+    
+    dbc.CardBody(
+        [
+            html.Iframe(
+            sandbox='allow-scripts',
+            id='x_var_histogram',
+            height='300',
+            width='400',
+            style={'border-width': '2', 'border': '2px solid red', 'backgroundColor': "white"},
+            ################ The magic happens here
+            srcDoc = Plotter.make_histogram().to_html()
+            ################ The magic happens here
+        )
+
+        ]
+    ),className="card text-white bg-secondary mb-3", style = {"width": "30rem"}
+)
 
 
 #####################
@@ -140,8 +158,10 @@ data_settings_content = html.Div([
 ])
 
 # Exploratory Data Analysis Layout
-eda_content = html.Div([jumbotron,
-                        card])
+eda_content = dbc.Container([
+    dbc.Row(dbc.Col(jumbotron)),
+    dbc.Row([dbc.Col(scatterplot), dbc.Col(x_var_histogram)])
+    ], fluid = True)
 
 
 app.layout = dbc.Tabs(
@@ -198,7 +218,14 @@ def update_plot(xaxis_column_name,
                              color_var).to_html()
     return updated_plot
 
+@app.callback(
+    Output('x_var_histogram', 'srcDoc'),
+    [Input('x-axis', 'value')]
+)
+def update_hist(x_var):
 
+    updated_hist = Plotter.make_histogram(x_var).to_html()
+    return updated_hist
 
 
 if __name__ == '__main__':

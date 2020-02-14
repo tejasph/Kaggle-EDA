@@ -29,3 +29,10 @@ class Plotter:
                             width=300, height=200)
 
         return (chart)
+
+    def make_histogram(self, xvar = 'chol'):
+        chart = alt.Chart(self.data).mark_bar().encode(
+            alt.X(xvar, bin = True),
+            y = 'count()'
+        )
+        return chart
