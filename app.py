@@ -36,17 +36,17 @@ app.title = 'Dash app with pure Altair HTML'
 heart_df = pd.read_csv("heart.csv")
 Plotter = utils.Plotter(heart_df)
 
-
+##################
 # dcc Components
-
-x_axis =    dcc.Dropdown(
+##################
+x_axis_dropdown =    dcc.Dropdown(
                 id = 'x-axis',
                 options = [{'label':k , 'value': k } for k in Plotter.features],
                 value = 'thal'
 
             )
 
-y_axis =    dcc.Dropdown(
+y_axis_dropdown =    dcc.Dropdown(
                 id = 'y-axis',
                 options = [{'label':k , 'value': k } for k in Plotter.features],
                 value = 'target'
@@ -101,7 +101,7 @@ jumbotron = dbc.Jumbotron(
             fluid=True,
         ),
         dbc.Row([dbc.Col(html.P("X-Axis")), dbc.Col(html.P("Y-axis"))]),
-        dbc.Row([dbc.Col(x_axis), dbc.Col(y_axis), dbc.Col(color_dropdown)])
+        dbc.Row([dbc.Col(x_axis_dropdown), dbc.Col(y_axis_dropdown), dbc.Col(color_dropdown)])
         
     ],
     fluid=True
@@ -128,6 +128,12 @@ card = dbc.Card(
     ),className="card text-white bg-secondary mb-3", style = {"width": "30rem"}
 )
 
+
+
+#####################
+# Tab Layout
+#####################
+
 # Data Settings Tab Layout
 data_settings_content = html.Div([
     variable_manager
@@ -138,9 +144,6 @@ eda_content = html.Div([jumbotron,
                         card])
 
 
-#####################
-# Tab Layout
-#####################
 app.layout = dbc.Tabs(
     [
         dbc.Tab(data_settings_content, label = "Data Settings"),
@@ -154,16 +157,19 @@ app.layout = dbc.Tabs(
 
 
 @app.callback(
-    Output("color","options"),
+    [Output("color","options"),
+    Output("x-axis","options")],
     [Input("categ-select", 'value')]
 )
 def update_var_types(categ_vars):
     
     # If user declares categorical types, then update dropdown options.
     if categ_vars is None:
-        return [{'label':k , 'value': k } for k in Plotter.features]
+        return [{'label':k , 'value': k } for k in Plotter.features], [{'label':k , 'value': k } for k in Plotter.features]
     else:
-        return [{'label': g, 'value' : g} for g in categ_vars]
+        num_vars = list(set(categ_vars)^set(Plotter.features))
+        print(num_vars)
+        return [{'label': g, 'value' : g} for g in categ_vars], [{'label': g, 'value' : g} for g in num_vars]
 
 @app.callback(
     Output("modal", "is_open"),
