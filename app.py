@@ -16,9 +16,9 @@ import pandas as pd
 from src import utils
 
 #To do:
-# - add new graph types
-# - get a nice layout going, using DBC cards or other boostrap componenets
-# - add user upload of their own data option
+# - add histogram plotting function
+# - add heatmap of correlations
+
 
 # Wishlist: graphing options, feature transformation options, feature engineering options?
 
@@ -52,11 +52,15 @@ y_axis =    dcc.Dropdown(
                 value = 'target'
             )
                 
-
+color_dropdown = dcc.Dropdown(
+    id = 'color', 
+    options = [{'label': k, 'value': k } for k in Plotter.features],
+    value = 'sex'
+)
 
 
 categorical_vars = dcc.Checklist(
-    id = 'categorical selection',
+    id = 'categ-select',
     options = [{'label':k , 'value': k } for k in Plotter.features],
     inputStyle={"margin-left": "20px", "margin-right" : "5px"}
 )
@@ -97,7 +101,7 @@ jumbotron = dbc.Jumbotron(
             fluid=True,
         ),
         dbc.Row([dbc.Col(html.P("X-Axis")), dbc.Col(html.P("Y-axis"))]),
-        dbc.Row([dbc.Col(x_axis), dbc.Col(y_axis)])
+        dbc.Row([dbc.Col(x_axis), dbc.Col(y_axis), dbc.Col(color_dropdown)])
         
     ],
     fluid=True
@@ -140,7 +144,7 @@ eda_content = html.Div([jumbotron,
 app.layout = dbc.Tabs(
     [
         dbc.Tab(data_settings_content, label = "Data Settings"),
-        dbc.Tab(eda_content, label = "Exploratory Data Analysis", disabled= True, id = "eda-tab")
+        dbc.Tab(eda_content, label = "Exploratory Data Analysis", id = "eda-tab")
     ]
 )
 
@@ -149,6 +153,17 @@ app.layout = dbc.Tabs(
 #####################
 
 
+@app.callback(
+    Output("color","options"),
+    [Input("categ-select", 'value')]
+)
+def update_var_types(categ_vars):
+    
+    # If user declares categorical types, then update dropdown options.
+    if categ_vars is None:
+        return [{'label':k , 'value': k } for k in Plotter.features]
+    else:
+        return [{'label': g, 'value' : g} for g in categ_vars]
 
 @app.callback(
     Output("modal", "is_open"),
@@ -164,14 +179,17 @@ def toggle_modal(n1, n2, is_open):
 @app.callback(
     Output('scatter_plot', 'srcDoc'),
     [Input('x-axis', 'value'),
-     Input('y-axis', 'value')])
+     Input('y-axis', 'value'),
+     Input('color', 'value')])
 def update_plot(xaxis_column_name,
-                yaxis_column_name):
+                yaxis_column_name,
+                color_var):
     '''
     Takes in an xaxis_column_name and calls make_plot to update our Altair figure
     '''
     updated_plot = Plotter.make_scatter(xaxis_column_name,
-                             yaxis_column_name).to_html()
+                             yaxis_column_name, 
+                             color_var).to_html()
     return updated_plot
 
 

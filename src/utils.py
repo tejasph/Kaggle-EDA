@@ -18,13 +18,14 @@ class Plotter:
         self.categorical_feat = []
 
     def make_scatter(self, xval = 'age',
-              yval = 'trestbps'):
+              yval = 'trestbps',
+              color = "sex"):
 
         chart = alt.Chart(self.data).mark_point(size=90).encode(
                     alt.X(xval),
                     alt.Y(yval),
+                    alt.Color(color + ":N")
                 ).properties(title='{0} vs. {1}'.format(xval,yval),
                             width=300, height=200)
-
 
         return (chart)
