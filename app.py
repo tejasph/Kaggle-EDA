@@ -20,6 +20,8 @@ from src import utils
 # - bar charts
 # - disable 2nd tab until variables selected
 # - add tool tips
+# - add a dashtable and variable typification
+# - automate default graph variables that are used
 
 
 
@@ -120,7 +122,7 @@ scatterplot = dbc.Card(
         dbc.Row(dbc.Col(html.H4("Title of the Scatterplot", className="card-title"))),
         dbc.Row(dbc.Col(html.Iframe(
         sandbox='allow-scripts',
-        id='scatter_plot',
+        id='scatter-plot',
         height='450',
         width='650',
         style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
@@ -153,8 +155,31 @@ heatmap = dbc.Card(
         ]
 
     ), 
-    className="card text-white bg-secondary mb-3", style = {"width": "45rem"}
+    className="card text-white bg-secondary mb-3", style = {"width": "40rem"}
 )
+
+# BarChart
+bar_chart = dbc.Card(
+    
+    dbc.CardBody(
+        [
+        dbc.Row(dbc.Col(html.H4("Title of the Bar Chart", className="card-title"))),
+        dbc.Row(dbc.Col(html.Iframe(
+        sandbox='allow-scripts',
+        id='bar-chart',
+        height='450',
+        width='625',
+        style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
+        ################ The magic happens here
+        srcDoc = Plotter.make_bar().to_html()
+        ################ The magic happens here
+        ))),
+        ]
+
+    ), 
+    className="card text-white bg-secondary mb-3", style = {"width": "40rem"}
+)
+
 # x_var_histogram = dbc.Card(
     
 #     dbc.CardBody(
@@ -187,7 +212,7 @@ data_settings_content = html.Div([
 # Exploratory Data Analysis Layout
 eda_content = dbc.Container([
     dbc.Row(dbc.Col(jumbotron)),
-    dbc.Row(dbc.Col(scatterplot)),
+    dbc.Row([dbc.Col(scatterplot), dbc.Col(bar_chart)]),
     dbc.Row(heatmap)
     ], fluid = True)
 
@@ -231,7 +256,7 @@ def toggle_modal(n1, n2, is_open):
     return is_open
 
 @app.callback(
-    Output('scatter_plot', 'srcDoc'),
+    Output('scatter-plot', 'srcDoc'),
     [Input('x-axis-num', 'value'),
      Input('y-axis-num', 'value'),
      Input('color', 'value')])
@@ -244,6 +269,14 @@ def update_plot(xaxis_column_name,
     updated_plot = Plotter.make_scatter(xaxis_column_name,
                              yaxis_column_name, 
                              color_var).to_html()
+    return updated_plot
+
+@app.callback(
+    Output('bar-chart', 'srcDoc'),
+    [Input('color', 'value')])
+def update_bar(category):
+    updated_plot = Plotter.make_bar(category).to_html()
+    
     return updated_plot
 
 

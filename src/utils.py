@@ -27,7 +27,7 @@ class Plotter:
         x_scale = alt.Scale(domain = (self.data[xval].min(), self.data[xval].max()))
         y_scale = alt.Scale(domain = (self.data[yval].min(), self.data[yval].max()))
 
-        scatter = alt.Chart(self.data).mark_circle(size=90).encode(
+        scatter = alt.Chart(self.data).mark_circle(size=90, opacity = 0.3).encode(
                     alt.X(xval),
                     alt.Y(yval),
                     alt.Color(color + ":N", legend=alt.Legend(orient="left"))
@@ -71,3 +71,12 @@ class Plotter:
         text = "corr_val"
         )
         return (heatmap + text).properties(height = 500, width = 500)
+
+    def make_bar(self, x_val = 'sex'):
+
+        bar_chart = alt.Chart(self.data).mark_bar().encode(
+            alt.X(x_val + ":N"),
+            alt.Y('count()')
+        ).properties(height = 500, width = 500)
+
+        return bar_chart
