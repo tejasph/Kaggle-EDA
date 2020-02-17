@@ -16,8 +16,11 @@ import pandas as pd
 from src import utils
 
 #To do:
-# - add histogram plotting function
-# - add heatmap of correlations
+# - better data read-in functionality
+# - bar charts
+# - disable 2nd tab until variables selected
+# - add tool tips
+
 
 
 # Wishlist: graphing options, feature transformation options, feature engineering options?
@@ -33,21 +36,23 @@ app.config['suppress_callback_exceptions'] = True
 server = app.server
 app.title = 'Dash app with pure Altair HTML'
 
+# Manipulate this to read in your data correctly
 heart_df = pd.read_csv("heart.csv")
+
 Plotter = utils.Plotter(heart_df)
 
 ##################
 # dcc Components
 ##################
 x_axis_dropdown =    dcc.Dropdown(
-                id = 'x-axis',
+                id = 'x-axis-num',
                 options = [{'label':k , 'value': k } for k in Plotter.features],
                 value = 'thal'
 
             )
 
 y_axis_dropdown =    dcc.Dropdown(
-                id = 'y-axis',
+                id = 'y-axis-num',
                 options = [{'label':k , 'value': k } for k in Plotter.features],
                 value = 'target'
             )
@@ -112,40 +117,62 @@ scatterplot = dbc.Card(
     
     dbc.CardBody(
         [
-            html.P("test"),
-            html.Iframe(
-            sandbox='allow-scripts',
-            id='scatter_plot',
-            height='300',
-            width='400',
-            style={'border-width': '2', 'border': '2px solid red', 'backgroundColor': "white"},
-            ################ The magic happens here
-            srcDoc = Plotter.make_scatter().to_html()
-            ################ The magic happens here
-        )
-
+        dbc.Row(dbc.Col(html.H4("Title of the Scatterplot", className="card-title"))),
+        dbc.Row(dbc.Col(html.Iframe(
+        sandbox='allow-scripts',
+        id='scatter_plot',
+        height='450',
+        width='650',
+        style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
+        ################ The magic happens here
+        srcDoc = Plotter.make_scatter().to_html()
+        ################ The magic happens here
+        ))),
         ]
-    ),className="card text-white bg-secondary mb-3", style = {"width": "30rem"}
+
+    ), 
+    className="card text-white bg-secondary mb-3", style = {"width": "45rem"}
 )
 
-x_var_histogram = dbc.Card(
+# Heatmap
+heatmap = dbc.Card(
     
     dbc.CardBody(
         [
-            html.Iframe(
-            sandbox='allow-scripts',
-            id='x_var_histogram',
-            height='300',
-            width='400',
-            style={'border-width': '2', 'border': '2px solid red', 'backgroundColor': "white"},
-            ################ The magic happens here
-            srcDoc = Plotter.make_histogram().to_html()
-            ################ The magic happens here
-        )
-
+        dbc.Row(dbc.Col(html.H4("Title of the Heatmap", className="card-title"))),
+        dbc.Row(dbc.Col(html.Iframe(
+        sandbox='allow-scripts',
+        id='heatmap',
+        height='450',
+        width='625',
+        style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
+        ################ The magic happens here
+        srcDoc = Plotter.make_heatmap().to_html()
+        ################ The magic happens here
+        ))),
         ]
-    ),className="card text-white bg-secondary mb-3", style = {"width": "30rem"}
+
+    ), 
+    className="card text-white bg-secondary mb-3", style = {"width": "45rem"}
 )
+# x_var_histogram = dbc.Card(
+    
+#     dbc.CardBody(
+#         [
+#             html.Iframe(
+#             sandbox='allow-scripts',
+#             id='x_var_histogram',
+#             height='200',
+#             width='400',
+#             style={'border-width': '2', 'border': '2px solid red', 'backgroundColor': "white"},
+#             ################ The magic happens here
+#             srcDoc = Plotter.make_histogram().to_html()
+#             ################ The magic happens here
+#         )
+
+#         ]
+#     ),className="card text-white bg-secondary mb-3", style = {"width": "30rem"}
+# )
 
 
 #####################
@@ -160,7 +187,8 @@ data_settings_content = html.Div([
 # Exploratory Data Analysis Layout
 eda_content = dbc.Container([
     dbc.Row(dbc.Col(jumbotron)),
-    dbc.Row([dbc.Col(scatterplot), dbc.Col(x_var_histogram)])
+    dbc.Row(dbc.Col(scatterplot)),
+    dbc.Row(heatmap)
     ], fluid = True)
 
 
@@ -177,19 +205,19 @@ app.layout = dbc.Tabs(
 
 
 @app.callback(
-    [Output("color","options"),
-    Output("x-axis","options")],
-    [Input("categ-select", 'value')]
+    [Output('color','options'),
+    Output('x-axis-num','options'),
+    Output('y-axis-num', 'options')],
+    [Input('categ-select', 'value')]
 )
 def update_var_types(categ_vars):
-    
+    all_vars = [{'label':k , 'value': k } for k in Plotter.features]
     # If user declares categorical types, then update dropdown options.
     if categ_vars is None:
-        return [{'label':k , 'value': k } for k in Plotter.features], [{'label':k , 'value': k } for k in Plotter.features]
+        return all_vars, all_vars, all_vars
     else:
-        num_vars = list(set(categ_vars)^set(Plotter.features))
-        print(num_vars)
-        return [{'label': g, 'value' : g} for g in categ_vars], [{'label': g, 'value' : g} for g in num_vars]
+        num_vars = [{'label': g, 'value' : g} for g in list(set(categ_vars)^set(Plotter.features))]
+        return [{'label': g, 'value' : g} for g in categ_vars], num_vars, num_vars
 
 @app.callback(
     Output("modal", "is_open"),
@@ -204,8 +232,8 @@ def toggle_modal(n1, n2, is_open):
 
 @app.callback(
     Output('scatter_plot', 'srcDoc'),
-    [Input('x-axis', 'value'),
-     Input('y-axis', 'value'),
+    [Input('x-axis-num', 'value'),
+     Input('y-axis-num', 'value'),
      Input('color', 'value')])
 def update_plot(xaxis_column_name,
                 yaxis_column_name,
@@ -217,15 +245,6 @@ def update_plot(xaxis_column_name,
                              yaxis_column_name, 
                              color_var).to_html()
     return updated_plot
-
-@app.callback(
-    Output('x_var_histogram', 'srcDoc'),
-    [Input('x-axis', 'value')]
-)
-def update_hist(x_var):
-
-    updated_hist = Plotter.make_histogram(x_var).to_html()
-    return updated_hist
 
 
 if __name__ == '__main__':
