@@ -17,8 +17,7 @@ from src import utils
 
 #To do:
 # - better data read-in functionality
-# - bar charts
-# - disable 2nd tab until variables selected
+# - disable 2nd tab until variables selected (postpone)
 # - add tool tips
 # - add a dashtable and variable typification
 # - automate default graph variables that are used
@@ -180,26 +179,6 @@ bar_chart = dbc.Card(
     className="card text-white bg-secondary mb-3", style = {"width": "40rem"}
 )
 
-# x_var_histogram = dbc.Card(
-    
-#     dbc.CardBody(
-#         [
-#             html.Iframe(
-#             sandbox='allow-scripts',
-#             id='x_var_histogram',
-#             height='200',
-#             width='400',
-#             style={'border-width': '2', 'border': '2px solid red', 'backgroundColor': "white"},
-#             ################ The magic happens here
-#             srcDoc = Plotter.make_histogram().to_html()
-#             ################ The magic happens here
-#         )
-
-#         ]
-#     ),className="card text-white bg-secondary mb-3", style = {"width": "30rem"}
-# )
-
-
 #####################
 # Tab Layout
 #####################
@@ -283,22 +262,6 @@ def update_bar(category):
 if __name__ == '__main__':
     app.run_server(debug=True)
 
-# container = dbc.Container([
-#     dbc.Row([
-#         dbc.Col(
-#             # html.Iframe(
-#             #     sandbox='allow-scripts',
-#             #     id='basic_plot',
-#             #     height='300',
-#             #     width='400',
-#             #     style={'border-width': '0'},
-#             #     ################ The magic happens here
-#             #     srcDoc = make_plot().to_html()
-#             #     ################ The magic happens here
-#             # )
-#         )
-#     ])
-# ])
 
 
 # content = dbc.Container([
