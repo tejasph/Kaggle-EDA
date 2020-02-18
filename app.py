@@ -64,33 +64,52 @@ color_dropdown = dcc.Dropdown(
     value = 'sex'
 )
 
-
-categorical_vars = dcc.Checklist(
-    id = 'categ-select',
-    options = [{'label':k , 'value': k } for k in Plotter.features],
+x_trans = dcc.RadioItems(
+    id = 'x-trans',
+    options=[
+        {'label': 'Unscaled', 'value': 'Unscaled'},
+        {'label': 'Natural Log Transformation', 'value': 'log'}
+    ],
+    value='Unscaled',
     inputStyle={"margin-left": "20px", "margin-right" : "5px"}
-)
+)  
 
-# once variables are selected, we can disable everything else; or better yet, have the upload and variable selections in the first tab, disable other tabs
-variable_manager = html.Div(
-    [
-        dbc.Button("Typify Variables", id="open"),
-        dbc.Modal(
-            [
-                dbc.ModalHeader("Select categorical variables; the rest will be considered numerical"),
-                dbc.ModalBody(
-                    categorical_vars
-                ),
-                dbc.ModalFooter(
-                    dbc.Button("Submit", id="close", className="ml-auto")
-                ),
-            ],
-            id="modal",
-            size = "lg",
-            centered = True
-        ),
-    ]
-)
+y_trans = dcc.RadioItems(
+    id = 'y-trans',
+    options=[
+        {'label': 'Unscaled', 'value': 'Unscaled'},
+        {'label': 'Natural Log Transformation', 'value': 'log'}
+    ],
+    value='Unscaled',
+    inputStyle={"margin-left": "20px", "margin-right" : "5px"}
+)  
+
+# categorical_vars = dcc.Checklist(
+#     id = 'categ-select',
+#     options = [{'label':k , 'value': k } for k in Plotter.features],
+#     inputStyle={"margin-left": "20px", "margin-right" : "5px"}
+# )
+
+# # once variables are selected, we can disable everything else; or better yet, have the upload and variable selections in the first tab, disable other tabs
+# variable_manager = html.Div(
+#     [
+#         dbc.Button("Typify Variables", id="open"),
+#         dbc.Modal(
+#             [
+#                 dbc.ModalHeader("Select categorical variables; the rest will be considered numerical"),
+#                 dbc.ModalBody(
+#                     categorical_vars
+#                 ),
+#                 dbc.ModalFooter(
+#                     dbc.Button("Submit", id="close", className="ml-auto")
+#                 ),
+#             ],
+#             id="modal",
+#             size = "lg",
+#             centered = True
+#         ),
+#     ]
+# )
 
 jumbotron = dbc.Jumbotron(
     [
@@ -104,7 +123,8 @@ jumbotron = dbc.Jumbotron(
                     className="lead",
                 ))),
                 dbc.Row([dbc.Col(html.P("X-Axis")), dbc.Col(html.P("Y-axis")), dbc.Col(html.P("Category"))]),
-                dbc.Row([dbc.Col(x_axis_dropdown), dbc.Col(y_axis_dropdown), dbc.Col(color_dropdown)])               
+                dbc.Row([dbc.Col(x_axis_dropdown), dbc.Col(y_axis_dropdown), dbc.Col(color_dropdown)]),
+                dbc.Row([dbc.Col(x_trans, width = 4), dbc.Col(y_trans, width = {'size': 4})])               
             ],
             fluid=True,
         ),       
@@ -226,17 +246,28 @@ app.layout = dbc.Container([
     Output('scatter-plot', 'srcDoc'),
     [Input('x-axis-num', 'value'),
      Input('y-axis-num', 'value'),
-     Input('color', 'value')])
+     Input('color', 'value'), 
+     Input('x-trans', 'value'),
+     Input('y-trans', 'value')])
 def update_plot(xaxis_column_name,
                 yaxis_column_name,
-                color_var):
+                color_var, 
+                x_trans,
+                y_trans):
     '''
     Takes in an xaxis_column_name and calls make_plot to update our Altair figure
     '''
     updated_plot = Plotter.make_scatter(xaxis_column_name,
                              yaxis_column_name, 
-                             color_var).to_html()
+                             color_var, x_trans, y_trans).to_html()
     return updated_plot
+
+# @app.callback(
+#     Output('scatter-plot', 'srcDoc'),
+#     [Input('x-trans', 'value')]
+# )
+# def transform_plot(x_trans):
+#     updated
 
 @app.callback(
     Output('bar-chart', 'srcDoc'),

@@ -9,6 +9,7 @@
 
 import pandas as pd
 import altair as alt
+import numpy as np
 
 class Plotter:
     def __init__(self, data): 
@@ -20,27 +21,38 @@ class Plotter:
         self.numerical_feat = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
         self.categorical_feat = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal', 'target']
 
-    def make_scatter(self, xval = 'age',
-              yval = 'trestbps',
-              color = "sex"):
-        
-        x_scale = alt.Scale(domain = (self.data[xval].min(), self.data[xval].max()))
-        y_scale = alt.Scale(domain = (self.data[yval].min(), self.data[yval].max()))
+        self.x_trans = None
 
-        scatter = alt.Chart(self.data).mark_circle(size=90, opacity = 0.3).encode(
-                    alt.X(xval),
-                    alt.Y(yval),
+    def make_scatter(self, xval = 'age',yval = 'trestbps', color = "sex", x_transform = None, y_transform = None):
+        '''
+        '''
+
+        df = self.data.copy(deep = True)
+
+        if x_transform == "log":
+            df[xval] = np.log(df[xval])
+
+        if y_transform == "log":
+            df[yval] = np.log(df[yval])
+        
+        x_scale = alt.Scale(domain = (df[xval].min(), df[xval].max()))
+        y_scale = alt.Scale(domain = (df[yval].min(), df[yval].max()))
+
+        print(x_scale.domain)
+        scatter = alt.Chart(df).mark_circle(size=90, opacity = 0.3).encode(
+                    alt.X(xval, scale = x_scale),
+                    alt.Y(yval, scale = y_scale),
                     alt.Color(color + ":N", legend=alt.Legend(orient="left"))
                 ).properties(width=300, height=200)
 
-        x_hist = alt.Chart(self.data).mark_bar(opacity = 0.3).encode(
+        x_hist = alt.Chart(df).mark_bar(opacity = 0.3).encode(
                 alt.X(xval, bin=alt.Bin(extent = x_scale.domain), title = ""),
                 alt.Y('count()', stack = None), 
                 alt.Color(color + ":N")                 
             ).properties(title='{0} distribution'.format(xval),
                             width=300, height=100)
 
-        y_hist = alt.Chart(self.data).mark_bar(opacity = 0.4).encode(
+        y_hist = alt.Chart(df).mark_bar(opacity = 0.4).encode(
             alt.X('count()', stack = None),
             alt.Y(yval, bin = alt.Bin(extent = y_scale.domain), title = ""),
             alt.Color(color + ":N")
