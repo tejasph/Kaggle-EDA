@@ -17,8 +17,8 @@ class Plotter:
         self.features = data.columns
 
         # User will specify these within the app
-        self.numerical_feat = []
-        self.categorical_feat = []
+        self.numerical_feat = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
+        self.categorical_feat = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal', 'target']
 
     def make_scatter(self, xval = 'age',
               yval = 'trestbps',
@@ -70,13 +70,13 @@ class Plotter:
         text = base.mark_text().encode(
         text = "corr_val"
         )
-        return (heatmap + text).properties(height = 500, width = 500)
+        return (heatmap + text).properties(height = 375, width = 450)
 
     def make_bar(self, x_val = 'sex'):
 
         bar_chart = alt.Chart(self.data).mark_bar().encode(
             alt.X(x_val + ":N"),
             alt.Y('count()')
-        ).properties(height = 500, width = 500)
+        ).properties(height = 375, width = 500)
 
         return bar_chart

@@ -47,20 +47,20 @@ Plotter = utils.Plotter(heart_df)
 ##################
 x_axis_dropdown =    dcc.Dropdown(
                 id = 'x-axis-num',
-                options = [{'label':k , 'value': k } for k in Plotter.features],
-                value = 'thal'
+                options = [{'label':k , 'value': k } for k in Plotter.numerical_feat],
+                value = 'age'
 
             )
 
 y_axis_dropdown =    dcc.Dropdown(
                 id = 'y-axis-num',
-                options = [{'label':k , 'value': k } for k in Plotter.features],
-                value = 'target'
+                options = [{'label':k , 'value': k } for k in Plotter.numerical_feat],
+                value = 'chol'
             )
                 
 color_dropdown = dcc.Dropdown(
     id = 'color', 
-    options = [{'label': k, 'value': k } for k in Plotter.features],
+    options = [{'label': k, 'value': k } for k in Plotter.categorical_feat],
     value = 'sex'
 )
 
@@ -96,19 +96,18 @@ jumbotron = dbc.Jumbotron(
     [
         dbc.Container(
             [
-                html.Img(src='https://qtxasset.com/styles/breakpoint_sm_default_480px_w/s3/fiercebiotech/1555676120/connor-wells-534089-unsplash.jpg/connor-wells-534089-unsplash.jpg?MLzphivqxLKuCKifkgl.3eGf_mETvKfV&itok=ii7r9S1Q', 
-                      width='100px'),
-                html.H1("Kaggle EDA Heart Disease", className="display-3"),
-                html.P(
+                dbc.Row(dbc.Col(html.Img(src='https://qtxasset.com/styles/breakpoint_sm_default_480px_w/s3/fiercebiotech/1555676120/connor-wells-534089-unsplash.jpg/connor-wells-534089-unsplash.jpg?MLzphivqxLKuCKifkgl.3eGf_mETvKfV&itok=ii7r9S1Q', 
+                      width='100px'))),
+                dbc.Row(dbc.Col(html.H1("Kaggle EDA Heart Disease", className="display-4"))),
+                dbc.Row(dbc.Col(html.P(
                     "Add a description of the dashboard",
                     className="lead",
-                ),
+                ))),
+                dbc.Row([dbc.Col(html.P("X-Axis")), dbc.Col(html.P("Y-axis")), dbc.Col(html.P("Category"))]),
+                dbc.Row([dbc.Col(x_axis_dropdown), dbc.Col(y_axis_dropdown), dbc.Col(color_dropdown)])               
             ],
             fluid=True,
-        ),
-        dbc.Row([dbc.Col(html.P("X-Axis")), dbc.Col(html.P("Y-axis"))]),
-        dbc.Row([dbc.Col(x_axis_dropdown), dbc.Col(y_axis_dropdown), dbc.Col(color_dropdown)])
-        
+        ),       
     ],
     fluid=True
 )
@@ -123,7 +122,7 @@ scatterplot = dbc.Card(
         sandbox='allow-scripts',
         id='scatter-plot',
         height='450',
-        width='650',
+        width='600',
         style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
         ################ The magic happens here
         srcDoc = Plotter.make_scatter().to_html()
@@ -132,7 +131,7 @@ scatterplot = dbc.Card(
         ]
 
     ), 
-    className="card text-white bg-secondary mb-3", style = {"width": "45rem"}
+    className="card text-white bg-secondary mb-3"
 )
 
 # Heatmap
@@ -154,7 +153,7 @@ heatmap = dbc.Card(
         ]
 
     ), 
-    className="card text-white bg-secondary mb-3", style = {"width": "40rem"}
+    className="card text-white bg-secondary mb-3"
 )
 
 # BarChart
@@ -167,7 +166,7 @@ bar_chart = dbc.Card(
         sandbox='allow-scripts',
         id='bar-chart',
         height='450',
-        width='625',
+        width='600',
         style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
         ################ The magic happens here
         srcDoc = Plotter.make_bar().to_html()
@@ -176,63 +175,52 @@ bar_chart = dbc.Card(
         ]
 
     ), 
-    className="card text-white bg-secondary mb-3", style = {"width": "40rem"}
+    className="card text-white bg-secondary mb-3"
 )
 
 #####################
-# Tab Layout
+# Layout
 #####################
 
-# Data Settings Tab Layout
-data_settings_content = html.Div([
-    variable_manager
-])
-
-# Exploratory Data Analysis Layout
-eda_content = dbc.Container([
-    dbc.Row(dbc.Col(jumbotron)),
-    dbc.Row([dbc.Col(scatterplot), dbc.Col(bar_chart)]),
-    dbc.Row(heatmap)
-    ], fluid = True)
 
 
-app.layout = dbc.Tabs(
-    [
-        dbc.Tab(data_settings_content, label = "Data Settings"),
-        dbc.Tab(eda_content, label = "Exploratory Data Analysis", id = "eda-tab")
-    ]
-)
+app.layout = dbc.Container([
+                dbc.Row(dbc.Col(jumbotron)), 
+                dbc.Row([dbc.Col(scatterplot, width = {'size':6}), dbc.Col(bar_chart, width = {"size" : 6})]),
+                dbc.Row(dbc.Col(heatmap, width = {'size': 6}), justify = "center")
+                ], fluid = True)
+
 
 #####################
 # Callbacks
 #####################
 
 
-@app.callback(
-    [Output('color','options'),
-    Output('x-axis-num','options'),
-    Output('y-axis-num', 'options')],
-    [Input('categ-select', 'value')]
-)
-def update_var_types(categ_vars):
-    all_vars = [{'label':k , 'value': k } for k in Plotter.features]
-    # If user declares categorical types, then update dropdown options.
-    if categ_vars is None:
-        return all_vars, all_vars, all_vars
-    else:
-        num_vars = [{'label': g, 'value' : g} for g in list(set(categ_vars)^set(Plotter.features))]
-        return [{'label': g, 'value' : g} for g in categ_vars], num_vars, num_vars
+# @app.callback(
+#     [Output('color','options'),
+#     Output('x-axis-num','options'),
+#     Output('y-axis-num', 'options')],
+#     [Input('categ-select', 'value')]
+# )
+# def update_var_types(categ_vars):
+#     all_vars = [{'label':k , 'value': k } for k in Plotter.features]
+#     # If user declares categorical types, then update dropdown options.
+#     if categ_vars is None:
+#         return all_vars, all_vars, all_vars
+#     else:
+#         num_vars = [{'label': g, 'value' : g} for g in list(set(categ_vars)^set(Plotter.features))]
+#         return [{'label': g, 'value' : g} for g in categ_vars], num_vars, num_vars
 
-@app.callback(
-    Output("modal", "is_open"),
-    [Input("open", "n_clicks"), Input("close", "n_clicks")],
-    [State("modal", "is_open")],
-)
-def toggle_modal(n1, n2, is_open):
+# @app.callback(
+#     Output("modal", "is_open"),
+#     [Input("open", "n_clicks"), Input("close", "n_clicks")],
+#     [State("modal", "is_open")],
+# )
+# def toggle_modal(n1, n2, is_open):
     
-    if n1 or n2:
-        return not is_open
-    return is_open
+#     if n1 or n2:
+#         return not is_open
+#     return is_open
 
 @app.callback(
     Output('scatter-plot', 'srcDoc'),
