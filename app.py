@@ -3,10 +3,12 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
-import dash_table
-
 import vega_datasets
 import pandas as pd
+
+### NEW IMPORT
+# See Docs here: https://dash-bootstrap-components.opensource.faculty.ai
+import dash_bootstrap_components as dbc
 
 from src import utils
 
@@ -21,9 +23,7 @@ from src import utils
 
 # Wishlist: graphing options, feature transformation options, feature engineering options?
 
-### NEW IMPORT
-# See Docs here: https://dash-bootstrap-components.opensource.faculty.ai
-import dash_bootstrap_components as dbc
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
