@@ -110,19 +110,19 @@ y_trans = dcc.RadioItems(
 #         ),
 #     ]
 # )
-
+# https://qtxasset.com/styles/breakpoint_sm_default_480px_w/s3/fiercebiotech/1555676120/connor-wells-534089-unsplash.jpg/connor-wells-534089-unsplash.jpg?MLzphivqxLKuCKifkgl.3eGf_mETvKfV&itok=ii7r9S1Q
 jumbotron = dbc.Jumbotron(
     [
         dbc.Container(
             [
-                dbc.Row(dbc.Col(html.Img(src='https://qtxasset.com/styles/breakpoint_sm_default_480px_w/s3/fiercebiotech/1555676120/connor-wells-534089-unsplash.jpg/connor-wells-534089-unsplash.jpg?MLzphivqxLKuCKifkgl.3eGf_mETvKfV&itok=ii7r9S1Q', 
-                      width='100px'))),
+                dbc.Row(dbc.Col(html.Img(src='https://cdn.wallpapersafari.com/71/89/cGTxAy.jpg', 
+                      width='160px'))),
                 dbc.Row(dbc.Col(html.H1("Kaggle EDA Heart Disease", className="display-4"))),
                 dbc.Row(dbc.Col(html.P(
-                    "Add a description of the dashboard",
+                    "Select variables to update the scatterplot and barplot.",
                     className="lead",
                 ))),
-                dbc.Row([dbc.Col(html.P("X-Axis")), dbc.Col(html.P("Y-axis")), dbc.Col(html.P("Category"))]),
+                dbc.Row([dbc.Col(html.P("X-Axis")), dbc.Col(html.P("Y-Axis")), dbc.Col(html.P("Category"))]),
                 dbc.Row([dbc.Col(x_axis_dropdown), dbc.Col(y_axis_dropdown), dbc.Col(color_dropdown)]),
                 dbc.Row([dbc.Col(x_trans, width = 4), dbc.Col(y_trans, width = {'size': 4})])               
             ],
@@ -151,7 +151,7 @@ scatterplot = dbc.Card(
         ]
 
     ), 
-    className="card text-white bg-secondary mb-3"
+    className="card border-secondary mb-3"
 )
 
 # Heatmap
@@ -173,7 +173,7 @@ heatmap = dbc.Card(
         ]
 
     ), 
-    className="card text-white bg-secondary mb-3"
+    className="card border-primary mb-3"
 )
 
 # BarChart

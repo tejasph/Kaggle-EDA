@@ -38,11 +38,10 @@ class Plotter:
         x_scale = alt.Scale(domain = (df[xval].min(), df[xval].max()))
         y_scale = alt.Scale(domain = (df[yval].min(), df[yval].max()))
 
-        print(x_scale.domain)
         scatter = alt.Chart(df).mark_circle(size=90, opacity = 0.3).encode(
                     alt.X(xval, scale = x_scale),
                     alt.Y(yval, scale = y_scale),
-                    alt.Color(color + ":N", legend=alt.Legend(orient="left"))
+                    alt.Color(color + ":N", scale=alt.Scale(scheme='tableau10'), legend=alt.Legend(orient="left"))
                 ).properties(width=300, height=200)
 
         x_hist = alt.Chart(df).mark_bar(opacity = 0.3).encode(
@@ -76,19 +75,19 @@ class Plotter:
             alt.Y("var2")
         )
         heatmap = base.mark_rect().encode(
-            alt.Color("corr_val", scale = alt.Scale(scheme = "viridis"))
+            alt.Color("corr_val", scale = alt.Scale(scheme = "lighttealblue"))
         )
         
         text = base.mark_text().encode(
         text = "corr_val"
         )
-        return (heatmap + text).properties(height = 375, width = 450)
+        return (heatmap + text).properties(height = 340, width = 440)
 
     def make_bar(self, x_val = 'sex'):
 
         bar_chart = alt.Chart(self.data).mark_bar().encode(
             alt.X(x_val + ":N"),
-            alt.Y('count()')
+            alt.Y('count()'),
         ).properties(height = 375, width = 500)
 
         return bar_chart
