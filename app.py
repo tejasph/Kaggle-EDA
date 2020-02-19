@@ -30,7 +30,7 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 app.config['suppress_callback_exceptions'] = True
 
 server = app.server
-app.title = 'Dash app with pure Altair HTML'
+app.title = 'Heart Disease EDA'
 
 # Manipulate this to read in your data correctly
 heart_df = pd.read_csv("heart.csv")
