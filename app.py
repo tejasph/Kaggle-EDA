@@ -9,7 +9,6 @@ from dash.dependencies import Input, Output, State
 
 import dash_table
 
-import altair as alt
 import vega_datasets
 import pandas as pd
 
