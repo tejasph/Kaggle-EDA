@@ -137,7 +137,7 @@ scatterplot = dbc.Card(
     
     dbc.CardBody(
         [
-        dbc.Row(dbc.Col(html.H4("Title of the Scatterplot", className="card-title"))),
+        dbc.Row(dbc.Col(html.H4("Title of the Scatterplot", className="card-title", id = 'scatter-title'))),
         dbc.Row(dbc.Col(html.Iframe(
         sandbox='allow-scripts',
         id='scatter-plot',
@@ -151,7 +151,7 @@ scatterplot = dbc.Card(
         ]
 
     ), 
-    className="card border-secondary mb-3"
+    className="card border-primary mb-3"
 )
 
 # Heatmap
@@ -159,7 +159,7 @@ heatmap = dbc.Card(
     
     dbc.CardBody(
         [
-        dbc.Row(dbc.Col(html.H4("Title of the Heatmap", className="card-title"))),
+        dbc.Row(dbc.Col(html.H4("Pearson Correlational Heatmap", className="card-title"))),
         dbc.Row(dbc.Col(html.Iframe(
         sandbox='allow-scripts',
         id='heatmap',
@@ -181,7 +181,7 @@ bar_chart = dbc.Card(
     
     dbc.CardBody(
         [
-        dbc.Row(dbc.Col(html.H4("Title of the Bar Chart", className="card-title"))),
+        dbc.Row(dbc.Col(html.H4("Class Imbalance", className="card-title", id = 'bar-title'))),
         dbc.Row(dbc.Col(html.Iframe(
         sandbox='allow-scripts',
         id='bar-chart',
@@ -195,7 +195,55 @@ bar_chart = dbc.Card(
         ]
 
     ), 
-    className="card text-white bg-secondary mb-3"
+    className="card border-primary mb-3"
+)
+
+var_list = dbc.ListGroup(
+    [
+        dbc.ListGroupItem(
+            [
+                dbc.ListGroupItemHeading("Variable Codebook"),
+                dbc.ListGroupItemText(
+                    [
+                        dbc.Row(html.P("age -- age in years")),
+                        dbc.Row(html.P("sex -- (1 = male; 0 = female)")),
+                        dbc.Row(html.P("cp -- chest pain type (0 - Typical Angina (Heart related), 1 - Atypical Angina (Non-heart related), 2 - Non-Anginal pain (Non-heart related), 3 - Asymptomatic (No disease)")),
+                        dbc.Row(html.P("trestbps -- resting blood pressure (in mm Hg on admission to the hospital)")),
+                        dbc.Row(html.P("chol -- serum cholestoral in mg/dl (health levels are < 200mg/dl)")),
+                        dbc.Row(html.P("fbs -- (fasting blood sugar > 120 mg/dl) (1 = true; 0 = false)")),
+                        dbc.Row(html.P("restecg -- resting electrocardiographic results ( 0 = normal, 1 = ST-T wave abnormality, 2= probable or definite left ventricular hypertrophy by Estes' criteria )")),
+                        dbc.Row(html.P("thalach -- maximum heart rate achieved")),
+                        dbc.Row(html.P("exang -- exercise induced angina (1 = yes; 0 = no)")),
+                        dbc.Row(html.P("oldpeak -- ST depression induced by exercise relative to rest")),
+                        dbc.Row(html.P("slope -- the slope of the peak exercise ST segment (1 = upsloping, 2 = flat, 3 = downsloping)")),
+                        dbc.Row(html.P("ca -- number of major vessels (0-3) colored by flourosopy")),
+                        dbc.Row(html.P("thal -- (1 = normal; 2 = fixed defect; 3 = reversable defect)")),
+                        dbc.Row(html.P("target -- (1 -heart problem or 0 - no heart problem)" ))
+                    ]        
+                ),
+            ]
+        ),
+    ]
+)
+
+var_description = dbc.Jumbotron(
+    [
+    dbc.Row(html.H5("Variable Codebook")),
+    dbc.Row(html.P("age -- age in years")),
+    dbc.Row(html.P("sex -- (1 = male; 0 = female)")),
+    dbc.Row(html.P("cp -- chest pain type (0 - Typical Angina (Heart related) 1 - Atypical Angina (Non-heart related) 2 - Non-Anginal pain (Non-heart related) 3 - Asymptomatic (No disease)")),
+    dbc.Row(html.P("trestbps -- resting blood pressure (in mm Hg on admission to the hospital)")),
+    dbc.Row(html.P("chol -- serum cholestoral in mg/dl (health levels are < 200mg/dl)")),
+    dbc.Row(html.P("fbs -- (fasting blood sugar > 120 mg/dl) (1 = true; 0 = false)")),
+    dbc.Row(html.P("restecg -- resting electrocardiographic results ( 0 = normal, 1 = ST-T wave abnormality, 2= probable or definite left ventricular hypertrophy by Estes' criteria )")),
+    dbc.Row(html.P("thalach -- maximum heart rate achieved")),
+    dbc.Row(html.P("exang -- exercise induced angina (1 = yes; 0 = no)")),
+    dbc.Row(html.P("oldpeak -- ST depression induced by exercise relative to rest")),
+    dbc.Row(html.P("slope -- the slope of the peak exercise ST segment (1 = upsloping, 2 = flat, 3 = downsloping)")),
+    dbc.Row(html.P("ca -- number of major vessels (0-3) colored by flourosopy")),
+    dbc.Row(html.P("thal -- (1 = normal; 2 = fixed defect; 3 = reversable defect)")),
+    dbc.Row(html.P("target -- (1 -heart problem or 0 - no heart problem)" ))
+    ]
 )
 
 #####################
@@ -207,7 +255,7 @@ bar_chart = dbc.Card(
 app.layout = dbc.Container([
                 dbc.Row(dbc.Col(jumbotron)), 
                 dbc.Row([dbc.Col(scatterplot, width = {'size':6}), dbc.Col(bar_chart, width = {"size" : 6})]),
-                dbc.Row(dbc.Col(heatmap, width = {'size': 6}), justify = "center")
+                dbc.Row([dbc.Col(var_list),dbc.Col(heatmap, width = {'size': 6})], justify = "center")
                 ], fluid = True)
 
 
@@ -243,7 +291,8 @@ app.layout = dbc.Container([
 #     return is_open
 
 @app.callback(
-    Output('scatter-plot', 'srcDoc'),
+    [Output('scatter-plot', 'srcDoc'),
+    Output('scatter-title','children')],
     [Input('x-axis-num', 'value'),
      Input('y-axis-num', 'value'),
      Input('color', 'value'), 
@@ -260,7 +309,7 @@ def update_plot(xaxis_column_name,
     updated_plot = Plotter.make_scatter(xaxis_column_name,
                              yaxis_column_name, 
                              color_var, x_trans, y_trans).to_html()
-    return updated_plot
+    return updated_plot, f"{xaxis_column_name} vs {yaxis_column_name}"
 
 # @app.callback(
 #     Output('scatter-plot', 'srcDoc'),
@@ -270,12 +319,13 @@ def update_plot(xaxis_column_name,
 #     updated
 
 @app.callback(
-    Output('bar-chart', 'srcDoc'),
+    [Output('bar-chart', 'srcDoc'),
+    Output('bar-title', 'children')],
     [Input('color', 'value')])
 def update_bar(category):
     updated_plot = Plotter.make_bar(category).to_html()
     
-    return updated_plot
+    return updated_plot, f"Class count for {category}"
 
 
 if __name__ == '__main__':

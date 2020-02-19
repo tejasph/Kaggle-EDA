@@ -71,17 +71,17 @@ class Plotter:
         corr_df = self.data.corr().round(2).reset_index().melt(id_vars = "index",var_name = "var2", value_name = "corr_val")
         
         base = alt.Chart(corr_df).encode(
-            alt.X("index"),
-            alt.Y("var2")
+            alt.X("index", title = ""),
+            alt.Y("var2", title = "")
         )
         heatmap = base.mark_rect().encode(
-            alt.Color("corr_val", scale = alt.Scale(scheme = "lighttealblue"))
+            alt.Color("corr_val", scale = alt.Scale(scheme = "lighttealblue"), title = "Pearson Corr.")
         )
         
         text = base.mark_text().encode(
         text = "corr_val"
         )
-        return (heatmap + text).properties(height = 340, width = 440)
+        return (heatmap + text).properties(height = 350, width = 430)
 
     def make_bar(self, x_val = 'sex'):
 
