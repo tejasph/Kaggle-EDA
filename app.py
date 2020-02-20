@@ -27,9 +27,10 @@ from src import utils
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
+server = app.server
 app.config['suppress_callback_exceptions'] = True
 
-server = app.server
+
 app.title = 'Heart Disease EDA'
 
 # Manipulate this to read in your data correctly
