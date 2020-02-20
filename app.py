@@ -238,14 +238,14 @@ app.layout = dbc.Container([
 #     return updated_plot, f"{xaxis_column_name} vs {yaxis_column_name}"
 
 
-# @app.callback(
-#     [Output('bar-chart', 'srcDoc'),
-#     Output('bar-title', 'children')],
-#     [Input('color', 'value')])
-# def update_bar(category):
-#     updated_plot = Plotter.make_bar(category).to_html()
+@app.callback(
+    [Output('bar-chart', 'srcDoc'),
+    Output('bar-title', 'children')],
+    [Input('color', 'value')])
+def update_bar(category):
+    updated_plot = Plotter.make_bar(category).to_html()
     
-#     return updated_plot, f"Class count for {category}"
+    return updated_plot, f"Class count for {category}"
 
 
 if __name__ == '__main__':
