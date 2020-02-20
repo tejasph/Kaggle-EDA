@@ -155,26 +155,26 @@ scatterplot = dbc.Card(
 )
 
 # Heatmap
-# heatmap = dbc.Card(
+heatmap = dbc.Card(
     
-#     dbc.CardBody(
-#         [
-#         dbc.Row(dbc.Col(html.H4("Pearson Correlational Heatmap", className="card-title"))),
-#         dbc.Row(dbc.Col(html.Iframe(
-#         sandbox='allow-scripts',
-#         id='heatmap',
-#         height='450',
-#         width='625',
-#         style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
-#         ################ The magic happens here
-#         srcDoc = Plotter.make_heatmap().to_html()
-#         ################ The magic happens here
-#         ))),
-#         ]
+    dbc.CardBody(
+        [
+        dbc.Row(dbc.Col(html.H4("Pearson Correlational Heatmap", className="card-title"))),
+        dbc.Row(dbc.Col(html.Iframe(
+        sandbox='allow-scripts',
+        id='heatmap',
+        height='450',
+        width='625',
+        style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
+        ################ The magic happens here
+        srcDoc = Plotter.make_heatmap().to_html()
+        ################ The magic happens here
+        ))),
+        ]
 
-#     ), 
-#     className="card border-primary mb-3"
-# )
+    ), 
+    className="card border-primary mb-3"
+)
 
 # BarChart
 bar_chart = dbc.Card(
@@ -255,10 +255,10 @@ var_description = dbc.Jumbotron(
 app.layout = dbc.Container([
                 dbc.Row(dbc.Col(jumbotron)), 
                 dbc.Row([dbc.Col(scatterplot, width = {'size':6}), dbc.Col(bar_chart, width = {"size" : 6})]),
-                dbc.Row([dbc.Col(var_list)], justify = "center")
+                dbc.Row([dbc.Col(var_list), dbc.Col(heatmap, width = {'size': 6})], justify = "center")
                 ], fluid = True)
 
-#,dbc.Col(heatmap, width = {'size': 6})
+#
 
 
 #####################
@@ -313,12 +313,6 @@ def update_plot(xaxis_column_name,
                              color_var, x_trans, y_trans).to_html()
     return updated_plot, f"{xaxis_column_name} vs {yaxis_column_name}"
 
-# @app.callback(
-#     Output('scatter-plot', 'srcDoc'),
-#     [Input('x-trans', 'value')]
-# )
-# def transform_plot(x_trans):
-#     updated
 
 @app.callback(
     [Output('bar-chart', 'srcDoc'),
@@ -335,50 +329,4 @@ if __name__ == '__main__':
 
 
 
-# content = dbc.Container([
-#     dbc.Row(
-#                 [
-#                     dbc.Col(
-
-#                         dcc.Dropdown(
-#                             id='dd-chart-x',
-#                             options=[
-#                                 {'label': 'Fuel Efficiency', 'value': 'Miles_per_Gallon'},
-#                                 {'label': 'Cylinders', 'value': 'Cylinders'},
-#                                 {'label': 'Displacement', 'value': 'Displacement'},
-#                                 {'label': 'Horsepower', 'value': 'Horsepower'}
-#                             ],
-#                             value='Horsepower',
-#                             # style=dict(width='45%',
-#                             #         verticalAlign="middle")
-#                             ), 
-#                             width= {'size':2, 'offset': 10}
-#                             ),
-#                     dbc.Col(        
-#                         dcc.Dropdown(
-#                         id='dd-chart-y',
-#                         options=[
-#                             {'label': 'Fuel Efficiency', 'value': 'Miles_per_Gallon'},
-#                             {'label': 'Cylinders', 'value': 'Cylinders'},
-#                             {'label': 'Displacement', 'value': 'Displacement'},
-#                             {'label': 'Horsepower', 'value': 'Horsepower'}
-#                         ],
-#                         value='Displacement'
-#                         ), width=2
-#                     ),
-#                     dbc.Col(
-#                     html.Iframe(
-#                         sandbox='allow-scripts',
-#                         id='plot',
-#                         height='560',
-#                         width='700',
-#                         style={'border-width': '0'},
-#                         ################ The magic happens here
-#                         srcDoc=make_plot().to_html()
-#                         ################ The magic happens here
-#                         ),width='6'),
-#                 ]
-#             )
-#     ]
-# )
 
