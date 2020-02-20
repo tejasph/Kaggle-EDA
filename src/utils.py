@@ -35,8 +35,8 @@ class Plotter:
         if y_transform == "log":
             df[yval] = np.log(df[yval])
       
-        x_scale = alt.Scale(domain = (df[xval].min(), df[xval].max()))
-        y_scale = alt.Scale(domain = (df[yval].min(), df[yval].max()))
+        x_scale = alt.Scale(domain = (float(df[xval].min()), float(df[xval].max())))
+        y_scale = alt.Scale(domain = (float(df[yval].min()), float(df[yval].max())))
 
         scatter = alt.Chart(df).mark_circle(size=90, opacity = 0.3).encode(
                     alt.X(xval, scale = x_scale),
