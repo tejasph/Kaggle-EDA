@@ -29,11 +29,11 @@ class Plotter:
 
         df = self.data.copy(deep = True)
 
-        # if x_transform == "log":
-        #     df[xval] = np.log(df[xval])
+        if x_transform == "log":
+            df[xval] = np.log(df[xval])
 
-        # if y_transform == "log":
-        #     df[yval] = np.log(df[yval])
+        if y_transform == "log":
+            df[yval] = np.log(df[yval])
       
         x_scale = alt.Scale(domain = (df[xval].min(), df[xval].max()))
         y_scale = alt.Scale(domain = (df[yval].min(), df[yval].max()))

@@ -102,26 +102,26 @@ jumbotron = dbc.Jumbotron(
 )
 
 # Scatterplot
-scatterplot = dbc.Card(
+# scatterplot = dbc.Card(
     
-    dbc.CardBody(
-        [
-        dbc.Row(dbc.Col(html.H4("Title of the Scatterplot", className="card-title", id = 'scatter-title'))),
-        dbc.Row(dbc.Col(html.Iframe(
-        sandbox='allow-scripts',
-        id='scatter-plot',
-        height='450',
-        width='600',
-        style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
-        ################ The magic happens here
-        srcDoc = Plotter.make_scatter().to_html()
-        ################ The magic happens here
-        ))),
-        ]
+#     dbc.CardBody(
+#         [
+#         dbc.Row(dbc.Col(html.H4("Title of the Scatterplot", className="card-title", id = 'scatter-title'))),
+#         dbc.Row(dbc.Col(html.Iframe(
+#         sandbox='allow-scripts',
+#         id='scatter-plot',
+#         height='450',
+#         width='600',
+#         style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
+#         ################ The magic happens here
+#         srcDoc = Plotter.make_scatter().to_html()
+#         ################ The magic happens here
+#         ))),
+#         ]
 
-    ), 
-    className="card border-primary mb-3"
-)
+#     ), 
+#     className="card border-primary mb-3"
+# )
 
 # Heatmap
 # heatmap = dbc.Card(
@@ -146,26 +146,26 @@ scatterplot = dbc.Card(
 # )
 
 # BarChart
-# bar_chart = dbc.Card(
+bar_chart = dbc.Card(
     
-#     dbc.CardBody(
-#         [
-#         dbc.Row(dbc.Col(html.H4("Class Imbalance", className="card-title", id = 'bar-title'))),
-#         dbc.Row(dbc.Col(html.Iframe(
-#         sandbox='allow-scripts',
-#         id='bar-chart',
-#         height='450',
-#         width='600',
-#         style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
-#         ################ The magic happens here
-#         srcDoc = Plotter.make_bar().to_html()
-#         ################ The magic happens here
-#         ))),
-#         ]
+    dbc.CardBody(
+        [
+        dbc.Row(dbc.Col(html.H4("Class Imbalance", className="card-title", id = 'bar-title'))),
+        dbc.Row(dbc.Col(html.Iframe(
+        sandbox='allow-scripts',
+        id='bar-chart',
+        height='450',
+        width='600',
+        style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
+        ################ The magic happens here
+        srcDoc = Plotter.make_bar().to_html()
+        ################ The magic happens here
+        ))),
+        ]
 
-#     ), 
-#     className="card border-primary mb-3"
-# )
+    ), 
+    className="card border-primary mb-3"
+)
 
 var_list = dbc.ListGroup(
     [
@@ -203,7 +203,7 @@ var_list = dbc.ListGroup(
 
 app.layout = dbc.Container([
                 dbc.Row(dbc.Col(jumbotron)),
-                dbc.Row([dbc.Col(scatterplot, width = {'size':6})]),
+                dbc.Row([dbc.Col(bar_chart, width = {'size':6})]),
                 ], fluid = True)
 
 #                dbc.Row([dbc.Col(scatterplot, width = {'size':6}), dbc.Col(bar_chart, width = {"size" : 6})]),
