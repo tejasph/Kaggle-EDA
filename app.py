@@ -36,6 +36,10 @@ app.title = 'Heart Disease EDA'
 # Manipulate this to read in your data correctly
 heart_df = pd.read_csv("heart.csv")
 
+for column in heart_df:
+    
+    print(heart_df[column].dtype)
+
 Plotter = utils.Plotter(heart_df)
 
 ##################
@@ -43,20 +47,20 @@ Plotter = utils.Plotter(heart_df)
 ##################
 x_axis_dropdown =    dcc.Dropdown(
                 id = 'x-axis-num',
-                options = [{'label':k , 'value': k } for k in Plotter.numerical_feat],
+                options = [{'label':k , 'value': str(k) } for k in Plotter.numerical_feat],
                 value = 'age'
 
             )
 
 y_axis_dropdown =    dcc.Dropdown(
                 id = 'y-axis-num',
-                options = [{'label':k , 'value': k } for k in Plotter.numerical_feat],
+                options = [{'label':k , 'value': str(k) } for k in Plotter.numerical_feat],
                 value = 'chol'
             )
                 
 color_dropdown = dcc.Dropdown(
     id = 'color', 
-    options = [{'label': k, 'value': k } for k in Plotter.categorical_feat],
+    options = [{'label': k, 'value': str(k) } for k in Plotter.categorical_feat],
     value = 'sex'
 )
 
@@ -151,26 +155,26 @@ scatterplot = dbc.Card(
 )
 
 # Heatmap
-heatmap = dbc.Card(
+# heatmap = dbc.Card(
     
-    dbc.CardBody(
-        [
-        dbc.Row(dbc.Col(html.H4("Pearson Correlational Heatmap", className="card-title"))),
-        dbc.Row(dbc.Col(html.Iframe(
-        sandbox='allow-scripts',
-        id='heatmap',
-        height='450',
-        width='625',
-        style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
-        ################ The magic happens here
-        srcDoc = Plotter.make_heatmap().to_html()
-        ################ The magic happens here
-        ))),
-        ]
+#     dbc.CardBody(
+#         [
+#         dbc.Row(dbc.Col(html.H4("Pearson Correlational Heatmap", className="card-title"))),
+#         dbc.Row(dbc.Col(html.Iframe(
+#         sandbox='allow-scripts',
+#         id='heatmap',
+#         height='450',
+#         width='625',
+#         style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
+#         ################ The magic happens here
+#         srcDoc = Plotter.make_heatmap().to_html()
+#         ################ The magic happens here
+#         ))),
+#         ]
 
-    ), 
-    className="card border-primary mb-3"
-)
+#     ), 
+#     className="card border-primary mb-3"
+# )
 
 # BarChart
 bar_chart = dbc.Card(
@@ -251,8 +255,10 @@ var_description = dbc.Jumbotron(
 app.layout = dbc.Container([
                 dbc.Row(dbc.Col(jumbotron)), 
                 dbc.Row([dbc.Col(scatterplot, width = {'size':6}), dbc.Col(bar_chart, width = {"size" : 6})]),
-                dbc.Row([dbc.Col(var_list),dbc.Col(heatmap, width = {'size': 6})], justify = "center")
+                dbc.Row([dbc.Col(var_list)], justify = "center")
                 ], fluid = True)
+
+#,dbc.Col(heatmap, width = {'size': 6})
 
 
 #####################

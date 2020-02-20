@@ -60,28 +60,28 @@ class Plotter:
 
         return (x_hist & (scatter | y_hist)).configure_view(strokeWidth=0)
 
-    def make_heatmap(self):
-        '''
-        Take in a dataframe and creates a heatmap
+    # def make_heatmap(self):
+    #     '''
+    #     Take in a dataframe and creates a heatmap
         
-        Arguments: 
-        corr_df (DataFrame) - Dataframe of correlational values
-        '''
+    #     Arguments: 
+    #     corr_df (DataFrame) - Dataframe of correlational values
+    #     '''
 
-        corr_df = self.data.corr().round(2).reset_index().melt(id_vars = "index",var_name = "var2", value_name = "corr_val")
+    #     corr_df = self.data.corr().round(2).reset_index().melt(id_vars = "index",var_name = "var2", value_name = "corr_val")
         
-        base = alt.Chart(corr_df).encode(
-            alt.X("index", title = ""),
-            alt.Y("var2", title = "")
-        )
-        heatmap = base.mark_rect().encode(
-            alt.Color("corr_val", scale = alt.Scale(scheme = "lighttealblue"), title = "Pearson Corr.")
-        )
+    #     base = alt.Chart(corr_df).encode(
+    #         alt.X("index", title = ""),
+    #         alt.Y("var2", title = "")
+    #     )
+    #     heatmap = base.mark_rect().encode(
+    #         alt.Color("corr_val", scale = alt.Scale(scheme = "lighttealblue"), title = "Pearson Corr.")
+    #     )
         
-        text = base.mark_text().encode(
-        text = "corr_val"
-        )
-        return (heatmap + text).properties(height = 350, width = 430)
+    #     text = base.mark_text().encode(
+    #     text = "corr_val"
+    #     )
+    #     return (heatmap + text).properties(height = 350, width = 430)
 
     def make_bar(self, x_val = 'sex'):
 
