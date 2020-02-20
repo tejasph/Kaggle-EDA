@@ -216,26 +216,26 @@ app.layout = dbc.Container([
 #####################
 
 
-# @app.callback(
-#     [Output('scatter-plot', 'srcDoc'),
-#     Output('scatter-title','children')],
-#     [Input('x-axis-num', 'value'),
-#      Input('y-axis-num', 'value'),
-#      Input('color', 'value'), 
-#      Input('x-trans', 'value'),
-#      Input('y-trans', 'value')])
-# def update_plot(xaxis_column_name,
-#                 yaxis_column_name,
-#                 color_var, 
-#                 x_trans,
-#                 y_trans):
-#     '''
-#     Takes in an xaxis_column_name and calls make_plot to update our Altair figure
-#     '''
-#     updated_plot = Plotter.make_scatter(xaxis_column_name,
-#                              yaxis_column_name, 
-#                              color_var, x_trans, y_trans).to_html()
-#     return updated_plot, f"{xaxis_column_name} vs {yaxis_column_name}"
+@app.callback(
+    [Output('scatter-plot', 'srcDoc'),
+    Output('scatter-title','children')],
+    [Input('x-axis-num', 'value'),
+     Input('y-axis-num', 'value'),
+     Input('color', 'value'), 
+     Input('x-trans', 'value'),
+     Input('y-trans', 'value')])
+def update_plot(xaxis_column_name,
+                yaxis_column_name,
+                color_var, 
+                x_trans,
+                y_trans):
+    '''
+    Takes in an xaxis_column_name and calls make_plot to update our Altair figure
+    '''
+    updated_plot = Plotter.make_scatter(xaxis_column_name,
+                             yaxis_column_name, 
+                             color_var, x_trans, y_trans).to_html()
+    return updated_plot, f"{xaxis_column_name} vs {yaxis_column_name}"
 
 
 @app.callback(
