@@ -81,7 +81,7 @@ class Plotter:
         text = base.mark_text().encode(
         text = "corr_val"
         )
-        return (heatmap).properties(height = 350, width = 430)
+        return (heatmap + text).properties(height = 350, width = 430)
 
     def make_bar(self, x_val = 'sex'):
 

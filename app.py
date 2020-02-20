@@ -124,26 +124,26 @@ jumbotron = dbc.Jumbotron(
 # )
 
 # Heatmap
-# heatmap = dbc.Card(
+heatmap = dbc.Card(
     
-#     dbc.CardBody(
-#         [
-#         dbc.Row(dbc.Col(html.H4("Pearson Correlational Heatmap", className="card-title"))),
-#         dbc.Row(dbc.Col(html.Iframe(
-#         sandbox='allow-scripts',
-#         id='heatmap',
-#         height='450',
-#         width='625',
-#         style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
-#         ################ The magic happens here
-#         srcDoc = Plotter.make_heatmap().to_html()
-#         ################ The magic happens here
-#         ))),
-#         ]
+    dbc.CardBody(
+        [
+        dbc.Row(dbc.Col(html.H4("Pearson Correlational Heatmap", className="card-title"))),
+        dbc.Row(dbc.Col(html.Iframe(
+        sandbox='allow-scripts',
+        id='heatmap',
+        height='450',
+        width='625',
+        style={'border-width': '2', 'border': '2px solid black', 'backgroundColor': "white"},
+        ################ The magic happens here
+        srcDoc = Plotter.make_heatmap().to_html()
+        ################ The magic happens here
+        ))),
+        ]
 
-#     ), 
-#     className="card border-primary mb-3"
-# )
+    ), 
+    className="card border-primary mb-3"
+)
 
 # BarChart
 bar_chart = dbc.Card(
