@@ -204,6 +204,7 @@ var_list = dbc.ListGroup(
 app.layout = dbc.Container([
                 dbc.Row(dbc.Col(jumbotron)),
                 dbc.Row([dbc.Col(bar_chart, width = {'size':6})]),
+                dbc.Row([dbc.Col(var_list), dbc.Col(heatmap, width = {'size': 6})], justify = "center")
                 ], fluid = True)
 
 #                dbc.Row([dbc.Col(scatterplot, width = {'size':6}), dbc.Col(bar_chart, width = {"size" : 6})]),
