@@ -86,7 +86,7 @@ jumbotron = dbc.Jumbotron(
             [
                 dbc.Row(dbc.Col(html.Img(src='https://cdn.wallpapersafari.com/71/89/cGTxAy.jpg', 
                       width='160px'))),
-                dbc.Row(dbc.Col(html.H1("UCI Heart Disease Exploratory Companion", className="display-4"))),
+                dbc.Row(dbc.Col(html.H1("UCI Heart Disease Exploratory Data Analysis", className="display-4"))),
                 dbc.Row(dbc.Col(html.P("Author: Tejas Phaterpekar"))),
                 dbc.Row(dbc.Col(html.P(
                     "This dashboard was made to help my fellow kagglers explore the heart disease dataset without having to bother with writing code. Simply select variables of interest to update the graphs below. It is also possible save graphs to use in any kernel/writing. Simply hover over the ellipses symbol contained within a plot and select a download format. This Dash is currently a prototype and I hope to add more features such as more graph choices and more data transformations. Any feedback is appreciated!",
