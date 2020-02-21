@@ -86,9 +86,10 @@ jumbotron = dbc.Jumbotron(
             [
                 dbc.Row(dbc.Col(html.Img(src='https://cdn.wallpapersafari.com/71/89/cGTxAy.jpg', 
                       width='160px'))),
-                dbc.Row(dbc.Col(html.H1("Kaggle EDA Heart Disease", className="display-4"))),
+                dbc.Row(dbc.Col(html.H1("UCI Heart Disease Exploratory Companion", className="display-4"))),
+                dbc.Row(dbc.Col(html.P("Author: Tejas Phaterpekar"))),
                 dbc.Row(dbc.Col(html.P(
-                    "Select variables to update the scatterplot and barplot.",
+                    "This dashboard was made to help my fellow kagglers explore the heart disease dataset without having to bother with writing code. Simply select variables of interest to update the graphs below. It is also possible save graphs to use in any kernel/writing. Simply hover over the ellipses symbol contained within a plot and select a download format. This Dash is currently a prototype and I hope to add more features such as more graph choices and more data transformations. Any feedback is appreciated!",
                     className="lead",
                 ))),
                 dbc.Row([dbc.Col(html.P("X-Axis")), dbc.Col(html.P("Y-Axis")), dbc.Col(html.P("Category"))]),
@@ -204,7 +205,9 @@ var_list = dbc.ListGroup(
 app.layout = dbc.Container([
                 dbc.Row(dbc.Col(jumbotron)),
                 dbc.Row([dbc.Col(scatterplot, width = {'size':6}), dbc.Col(bar_chart, width = {"size" : 6})]),
-                dbc.Row([dbc.Col(var_list), dbc.Col(heatmap, width = {'size': 6})], justify = "center")
+                dbc.Row([dbc.Col(var_list), dbc.Col(heatmap, width = {'size': 6})], justify = "center"),
+                dbc.Row(dbc.Col(html.A("Source: UCI Heart Disease Dataset", href = "https://archive.ics.uci.edu/ml/datasets/heart+Disease", target = "_blank"))),
+                dbc.Row(dbc.Col(html.P("This dashboard was created using the plotly dash platform for academic purposes.")))
                 ], fluid = True)
 
 #                dbc.Row([dbc.Col(scatterplot, width = {'size':6}), dbc.Col(bar_chart, width = {"size" : 6})]),
