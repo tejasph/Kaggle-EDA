@@ -4,7 +4,7 @@ numpy==1.17.4
 dash==1.6.1
 gunicorn==20.0.0
 dash-core-components==1.5.1
-dash-html-components==1.0.2
+dash-html-components==2.0.0
 dash-bootstrap-components==0.7.2
 vega_datasets==0.7.0
 
